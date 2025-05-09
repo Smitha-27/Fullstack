@@ -31,21 +31,39 @@
         <div class="contact-content">
             <div class="contact-form-container">
                 <h1 class="greet-heading">Get In Touch</h1>
-                <form id="myForm">
-                    <label for="nameInput">Name:</label>
-                    <input type="text" id="nameInput" placeholder="Enter your name" required /><br>
-                    
-                    <label for="emailInput">Email:</label>
-                    <input type="email" id="emailInput" placeholder="Enter your email" required /><br>
-                  
-                    <label for="ageInput">Age:</label>
-                    <input type="number" id="ageInput" placeholder="Enter your age" required /><br>
-                  
-                    <button type="submit">Submit</button>
-                  </form>
-                  
-                  <p id="message"></p>
-                  
+                <form id="contactForm">
+  <input type="text" id="name" placeholder="Name" required />
+  <input type="email" id="email" placeholder="Email" required />
+  <textarea id="message" placeholder="Message" required></textarea>
+  <button type="submit">Send</button>
+</form>
+
+<script>
+  document.getElementById('contactForm').addEventListener('submit', function (e) {
+    e.preventDefault();
+
+    const name = document.getElementById('name').value;
+    const email = document.getElementById('email').value;
+    const message = document.getElementById('message').value;
+
+    fetch('http://localhost:3000/api/contact', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name, email, message })
+    })
+    .then(res => res.json())
+    .then(data => {
+      alert(data.message || 'Thank you!');
+      document.getElementById('contactForm').reset();
+    })
+    .catch(err => {
+      console.error('Error:', err);
+      alert('Something went wrong.');
+    });
+  });
+</script>
+
+               </div>   
             <div class="contact-details">
                 <h1 class="greet-heading">My Contact Details</h1>
                 <div class="details">
@@ -66,7 +84,7 @@
                     <p>Kerala</p>
                 </div>
             </div>
-        </div>
+        
     </div>
 </div>
 <script src="contact-validation.js"></script>

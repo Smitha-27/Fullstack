@@ -1,0 +1,71 @@
+<<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Projects Management</title>
+</head>
+<body>
+  <h1>My Projects</h1>
+
+  <!-- Form to Add a New Project -->
+  <form id="projectForm">
+    <input type="text" id="name" placeholder="Project Name" required />
+    <input type="text" id="status" placeholder="Status (e.g., in progress)" required />
+    <button type="submit">Add Project</button>
+  </form>
+
+  <hr>
+
+  <!-- Container to Display Projects -->
+  <div id="projects"></div>
+
+  <script>
+    const projectContainer = document.getElementById('projects');
+    const form = document.getElementById('projectForm');
+
+    // Function to load and display all projects
+    function loadProjects() {
+      fetch('http://localhost:3000/api/projects')
+        .then(res => res.json())
+        .then(projects => {
+          projectContainer.innerHTML = '';  // Clear existing content
+          projects.forEach(project => {
+            const div = document.createElement('div');
+            div.innerHTML = `<h3>${project.name}</h3><p>Status: ${project.status}</p><hr>`;
+            projectContainer.appendChild(div);
+          });
+        })
+        .catch(error => {
+          console.error('Error fetching project data:', error);
+        });
+    }
+
+    // Handle form submission to add a new project
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();  // Prevent default form submission
+
+      const name = document.getElementById('name').value;
+      const status = document.getElementById('status').value;
+
+      fetch('http://localhost:3000/api/projects', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ name, status })
+      })
+      .then(res => res.json())
+      .then(() => {
+        form.reset();         // Reset the form
+        loadProjects();       // Reload the project list
+      })
+      .catch(error => {
+        console.error('Error adding new project:', error);
+      });
+    });
+
+    // Initial load of all projects when the page is loaded
+    loadProjects();
+  </script>
+</body>
+</html>
