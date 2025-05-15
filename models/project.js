@@ -1,5 +1,4 @@
 const mongoose = require('mongoose');
-
 const projectSchema = new mongoose.Schema({
   name: {
     type: String,
@@ -10,5 +9,4 @@ const projectSchema = new mongoose.Schema({
     required: true
   }
 });
-
 module.exports = mongoose.model('Project', projectSchema);

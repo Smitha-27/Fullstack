@@ -1,0 +1,57 @@
+<html>
+    <head>
+        <title> Services</title>
+    </head>
+    <body>
+        <form id="form1" >
+            <input type="text" id="name" placeholder="Project Name" required />
+            <input type="text" id="status" placeholder="Status (e.g., in progress)" required />
+            <button type="submit">Add Project</button>
+        </form>
+        <h2>My Projects</h2>
+<ul id="projectList"></ul>
+
+<script>
+
+ //Form Submission (Handling User Input):
+
+         
+    document.getElementById('form1').addEventListener('submit', async function (e) {
+      e.preventDefault();
+
+      const name = document.getElementById('name').value;
+      const status = document.getElementById('status').value;
+
+      const response = await fetch('/api/services', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name, status })
+      });
+
+      const data = await response.json();
+      alert(data.message || 'Project added!');
+    });
+    
+
+  async function loadProjects() {
+    const res = await fetch('/api/services');
+    const projects = await res.json();
+
+    const list = document.getElementById('projectList');
+    list.innerHTML = '';
+
+    projects.forEach(project => {
+      const item = document.createElement('li');
+      item.textContent = `${project.name} (${project.status})`;
+      list.appendChild(item);
+    });
+  }
+
+  window.onload = loadProjects; // Auto-run when page loads
+
+    
+  </script>
+
+    
+    </body>
+</html>
